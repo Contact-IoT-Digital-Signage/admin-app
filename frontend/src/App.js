@@ -6,7 +6,7 @@ const ZOOM_TOKEN = process.env.REACT_APP_ZOOM_TOKEN;
 
 function App() {
   const [zoomClient, setZoomClient] = useState();
-  const [callStarted, setCallStarted] = useState(false);
+  const [zoomStream, setZoomStream] = useState();
 
   useEffect(() => {
     const init = async () => {
@@ -20,101 +20,71 @@ function App() {
     };
   }, []);
 
-  const startVideoCall = () => {
-    const topic = "MYTOPIC";
+  const recieveVideoCall = async () => {
+    const topic = "Ike0001";
     const token = ZOOM_TOKEN;
-    const userName = "user1";
+    const userName = "user2";
 
-    zoomClient
-      .join(topic, token, userName)
-      .then(() => {
-        const stream = zoomClient.getMediaStream();
-        setCallStarted(true);
-        stream.startAudio();
-
-        zoomClient.on("auto-play-audio-failed", () => {
-          console.log("auto play failed, waiting for a user interaction");
-        });
-        stream.startVideo({
-          videoElement: document.querySelector("#self-view"),
-        });
-        zoomClient.on("connection-change", (payload) => {
-          console.log('connection-change', payload);
-        });
-        zoomClient.on("peer-video-state-change", (payload) => {
-          console.log('peer-video-state-change', payload)
-          if (payload.action === "Start") {
-            stream.renderVideo(
-              document.querySelector("#participant-canvas"),
-              payload.userId,
-              1920,
-              1080,
-              0,
-              0,
-              2
-            );
-          } else if (payload.action === "Stop") {
-            stream.stopRenderVideo(
-              document.querySelector("#participant-canvas"),
-              payload.userId
-            );
-          }
-        });
-        zoomClient.getAllUser().forEach((user) => {
-          if (user.bVideoOn) {
-            stream.renderVideo(
-              document.querySelector("#participant-canvas"),
-              user.userId,
-              1920,
-              1080,
-              0,
-              0,
-              2
-            );
-          }
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      await zoomClient.join(topic, token, userName);
+      const stream = zoomClient.getMediaStream();
+      setZoomStream(stream)
+      stream.startAudio();
+      stream.startVideo({
+        videoElement: document.querySelector("#self-view"),
       });
+      zoomClient.getAllUser().forEach((user) => {
+        if (user.bVideoOn) {
+          stream.renderVideo(
+            document.querySelector("#participant-view"),
+            user.userId,
+            720,
+            480,
+            0,
+            0,
+            2
+          );
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const selfViewStyle = {
-    position: "absolute",
-    bottom: "0px",
-    left: "320px",
-    height: "360px",
-    width: "480px",
-  };
-
-  const selfViewHidden = {
-    visibility: "hidden",
+    width: "320px",
   };
 
   const participantViewStyle = {
-    position: "absolute",
-    top: "0px",
-    left: "0px",
-    height: "1080px",
-    width: "1920px",
+    height: "480px",
+    width: "720px",
   };
 
-  const participantViewHidden = {
-    visibility: "hidden",
+  const screenViewStyle = {
+    height: "480px",
+    width: "720px",
   };
+
+  const endVideoCall = async () => {
+    try {
+      await zoomClient.leave(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startShareScreen = ()  => {
+    zoomStream.startShareScreen(document.querySelector("#screen-view"))
+  }
 
   return (
     <div className="App">
-      <canvas
-        id="participant-canvas"
-        style={callStarted ? participantViewStyle : participantViewHidden}
-      ></canvas>
-      <video
-        id="self-view"
-        style={callStarted ? selfViewStyle : selfViewHidden}
-      ></video>
-
-      <button onClick={startVideoCall}>Recieve Call</button>
+      <canvas id="participant-view" style={participantViewStyle}></canvas>
+      <video id="self-view" style={selfViewStyle}></video>
+      <video id="screen-view" style={screenViewStyle}></video>
+      <button onClick={recieveVideoCall}>Recieve Call</button>
+      <button onClick={endVideoCall}>End Call</button>
+      <button onClick={startShareScreen}>Start Share Screen</button>
     </div>
   );
 }
