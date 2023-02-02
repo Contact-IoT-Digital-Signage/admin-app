@@ -46,6 +46,7 @@ function App() {
           );
         }
       });
+      zoomClient.getRecordingClient().startCloudRecording()
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +68,7 @@ function App() {
 
   const endVideoCall = async () => {
     try {
+      zoomClient.getRecordingClient().stopCloudRecording()
       await zoomClient.leave(true);
     } catch (error) {
       console.log(error);
