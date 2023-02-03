@@ -5,7 +5,7 @@ import CallIcon from "@mui/icons-material/Call";
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 
-const ZOOM_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfa2V5IjoiZk5tUWloVkttbG5IREFmYmN1c1JWNzk3a05OQTVFSW5RWVVCIiwidHBjIjoiSWtlMDAwMSIsInZlcnNpb24iOjEsInJvbGVfdHlwZSI6MSwiaWF0IjoxNjc1Mzk0Nzk0LCJleHAiOjE2NzU0ODExOTR9.Mojej9tgl5B-G_EoKuFsRyxToAqc1wM3Q7oHFplZknw";
+const ZOOM_TOKEN = process.env.REACT_APP_ZOOM_TOKEN;
 
 function CallPortal() {
     const [zoomClient, setZoomClient] = useState();
