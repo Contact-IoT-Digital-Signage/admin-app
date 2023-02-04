@@ -17,7 +17,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 // Components
-import { mainListItems, secondaryListItems } from './NavList';
+import { MainListItems, secondaryListItems } from './NavList';
 import UserMenu from './UserMenu';
 
 
@@ -131,7 +131,7 @@ export default function Layout({page}) {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <MainListItems />
             <Divider sx={{ my: 1 }} />
             {secondaryListItems}
           </List>

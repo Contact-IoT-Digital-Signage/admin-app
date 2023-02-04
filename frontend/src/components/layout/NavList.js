@@ -10,37 +10,54 @@ import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CallIcon from '@mui/icons-material/Call';
 
-export const mainListItems = (
-  <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
+
+export function MainListItems() {
+  const selectedPage = useLocation().pathname;
+  return (<>
+    <Link to='/dashboard' style={{color: 'black', textDecoration: 'none'}}>
+      <ListItemButton selected={'/dashboard' === selectedPage} >
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItemButton>
+    </Link>
+
+    <Link style={{color: 'black', textDecoration: 'none'}} to='/call-center'>
+      <ListItemButton selected={'/call-center' === selectedPage}>
+        <ListItemIcon>
+          <CallIcon />
+        </ListItemIcon>
+        <ListItemText primary="Call Center" />
+      </ListItemButton>
+    </Link>
+
+    <Link style={{color: 'black', textDecoration: 'none'}} to='/reports'>
+      <ListItemButton selected={'/reports' === selectedPage}>
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Reports" />
+      </ListItemButton>
+    </Link>
+
+    <Link style={{color: 'black', textDecoration: 'none'}} to='/call-history'>
+      <ListItemButton selected={'/call-history' === selectedPage}>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="Call History" />
     </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <CallIcon />
-      </ListItemIcon>
-      <ListItemText primary="Call Center" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Call History" />
-    </ListItemButton>
-  </React.Fragment>
+    </Link>
+  </>
 );
+  }
 
 export const secondaryListItems = (
-  <React.Fragment>
+  <>
     <ListSubheader component="div" inset>
       Docs
     </ListSubheader>
@@ -62,5 +79,5 @@ export const secondaryListItems = (
       </ListItemIcon>
       <ListItemText primary="Etc" />
     </ListItemButton>
-  </React.Fragment>
+  </>
 );
