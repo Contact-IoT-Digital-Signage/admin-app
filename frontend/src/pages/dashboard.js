@@ -7,14 +7,20 @@ import Paper from '@mui/material/Paper';
 import RecentCalls from '../components/RecentCalls';
 import CallPortal from '../components/CallPortal';
 import Copyright from '../components/layout/Footer'
+import Title from '../components/layout/Title';
 
 export default function Dashboard() {
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={6}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <CallPortal />
+                    <Title>Reports Module</Title>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Title>Call Center Module</Title>
                 </Paper>
               </Grid>
               <Grid item xs={12}>

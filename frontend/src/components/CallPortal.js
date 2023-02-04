@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import ZoomVideo from "@zoom/videosdk";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import CallIcon from "@mui/icons-material/Call";
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
+import Title from "./layout/Title";
 
 const ZOOM_TOKEN = process.env.REACT_APP_ZOOM_TOKEN;
 
@@ -63,6 +64,7 @@ function CallPortal() {
 
     const endVideoCall = async () => {
         setActiveCall(false);
+        setActiveScreenShare(false);
         try {
             zoomClient.getRecordingClient().stopCloudRecording()
             await zoomClient.leave(true);
@@ -76,9 +78,15 @@ function CallPortal() {
         zoomStream.startShareScreen(document.querySelector("#screen-view"))
     }
 
+    const callData = {
+        id: '32768923798',
+        location: 'station 1',
+    }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Title>Call ID: {callData.id}</Title>
+            <Typography >Location: {callData.location}</Typography>
             {activeCall ? (
                 <>
                     <video style={{ width: '700px', height: '600px' }} id="self-view"></video>
