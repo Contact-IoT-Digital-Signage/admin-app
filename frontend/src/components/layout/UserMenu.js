@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { getAuth, signOut } from "firebase/auth";
+
 export default function UserMenu() {
     const [anchorElUser, setAnchorElUser] = useState(null);
     const handleOpenUserMenu = (event) => {
@@ -19,6 +21,17 @@ export default function UserMenu() {
     };
 
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+    const signOutClick = () => {
+        const auth = getAuth();
+        signOut(auth)
+          .then(() => {
+            // Sign-out successful.
+          })
+          .catch((error) => {
+            // An error happened.
+          });
+      };
 
     return (
         <Box sx={{ flexGrow: 0 }}>
@@ -50,7 +63,7 @@ export default function UserMenu() {
                     <Typography textAlign="center">Settings</Typography>
                 </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center" color={'error'}>Logout</Typography>
+                    <Typography textAlign="center" color={'error'} onClick={signOutClick}>Logout</Typography>
                 </MenuItem>
             </Menu>
         </Box>
