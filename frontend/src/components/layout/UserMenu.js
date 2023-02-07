@@ -27,6 +27,7 @@ export default function UserMenu() {
         signOut(auth)
           .then(() => {
             // Sign-out successful.
+            window.location = '/';
           })
           .catch((error) => {
             // An error happened.
@@ -62,8 +63,11 @@ export default function UserMenu() {
                 <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">Settings</Typography>
                 </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center" color={'error'} onClick={signOutClick}>Logout</Typography>
+                <MenuItem onClick={() => {
+                    handleCloseUserMenu();
+                    signOutClick();
+                }}>
+                    <Typography textAlign="center" color={'error'}>Logout</Typography>
                 </MenuItem>
             </Menu>
         </Box>
