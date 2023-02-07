@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import GoogleIcon from '@mui/icons-material/Google';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Copyright from "../components/layout/Footer";
@@ -51,11 +52,12 @@ export default function SignIn() {
 
   const signInClick = () => {
     const auth = getAuth();
+    console.log(auth)
     signInWithEmailAndPassword(auth, user.email, user.password)
       .then((userCredential) => {
+        window.location = '/dashboard';
         // Signed in
         const user = userCredential.user;
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -75,6 +77,7 @@ export default function SignIn() {
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
+        window.location = '/dashboard';
       })
       .catch((error) => {
         // Handle Errors here.
@@ -118,7 +121,7 @@ export default function SignIn() {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            noValidate
+            validate='true'
             sx={{ mt: 1 }}
           >
             <Button
@@ -129,7 +132,7 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
               onClick={signInWithGoogleClick}
             >
-              Continue With Google
+              <GoogleIcon sx={{marginRight: '5px'}} /> Login with Google
             </Button>
             <Typography component="h4" variant="h7">
               or
@@ -156,10 +159,7 @@ export default function SignIn() {
               autoComplete="current-password"
               onChange={handlePassword}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
@@ -170,27 +170,6 @@ export default function SignIn() {
               Sign In
             </Button>
 
-            <Grid container>
-              <Grid item xs>
-                <Link to="/" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to="/signup">{"Don't have an account? Sign Up"}</Link>
-              </Grid>
-            </Grid>
-
-            <Link to="/dashboard" style={{ textDecoration: "none" }}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Continue As Guest
-              </Button>
-            </Link>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
