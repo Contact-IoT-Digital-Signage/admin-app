@@ -9,7 +9,7 @@ import { getAuth } from "firebase/auth";
 
 const ZOOM_TOKEN = process.env.REACT_APP_ZOOM_TOKEN;
 
-function CallPortal() {
+function CallPortal({activecallInfo}) {
   const [zoomClient, setZoomClient] = useState();
   const [zoomStream, setZoomStream] = useState();
 
@@ -42,14 +42,10 @@ function CallPortal() {
         // Handle error
       });
 
-    const topic = "Ike0001";
-    const token = ZOOM_TOKEN;
-    const userName = "user2";
-
     setActiveCall(true);
 
     try {
-      await zoomClient.join(topic, token, userName);
+      await zoomClient.join(activecallInfo.tpc, activecallInfo.token, activecallInfo.signageName);
       const stream = zoomClient.getMediaStream();
       setZoomStream(stream);
       stream.startAudio();
@@ -62,7 +58,7 @@ function CallPortal() {
             document.querySelector("#participant-view"),
             user.userId,
             720,
-            480,
+            540,
             0,
             0,
             2
@@ -92,8 +88,8 @@ function CallPortal() {
   };
 
   const callData = {
-    id: "32768923798",
-    location: "station 1",
+    id: activecallInfo.tpc,
+    location:  activecallInfo.signageName,
   };
 
   return (
@@ -105,7 +101,7 @@ function CallPortal() {
       {activeCall ? (
         <>
           <video
-            style={{ width: "700px", height: "600px" }}
+            style={{ width: "420px", height: "420px" }}
             id="self-view"
           ></video>
         </>
@@ -115,7 +111,7 @@ function CallPortal() {
       {activeScreenShare ? (
         <>
           <video
-            style={{ width: "700px", height: "600px" }}
+            style={{ width: "420px", height: "420px" }}
             id="screen-view"
           ></video>
         </>
