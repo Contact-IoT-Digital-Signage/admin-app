@@ -35,15 +35,6 @@ export function MainListItems() {
       </ListItemButton>
     </Link>
 
-    <Link style={{color: 'black', textDecoration: 'none'}} to='/reports'>
-      <ListItemButton selected={'/reports' === selectedPage}>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Reports" />
-      </ListItemButton>
-    </Link>
-
     <Link style={{color: 'black', textDecoration: 'none'}} to='/call-history'>
       <ListItemButton selected={'/call-history' === selectedPage}>
         <ListItemIcon>
@@ -72,12 +63,6 @@ export const secondaryListItems = (
         <AssignmentIcon />
       </ListItemIcon>
       <ListItemText primary="Employee Handbook" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Etc" />
     </ListItemButton>
   </>
 );
