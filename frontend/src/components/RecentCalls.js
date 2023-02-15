@@ -1,58 +1,71 @@
-import * as React from 'react';
-import Link from '@mui/material/Link';
-import Title from './layout/Title';
-import { Button, Modal, Typography, TableRow, TableHead, TableCell, TableBody, Table, Box } from '@mui/material';
-import { useState } from 'react';
+import * as React from "react";
+// import Link from "@mui/material/Link";
+import Title from "./layout/Title";
+import {
+  Button,
+  Modal,
+  Typography,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  Table,
+  Box,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 
+import callhistoryService from "../api/callhistoryService";
 
-const data = [
-  {
-    tpc: "string",
-    caller: "signage name",
-    catcher: "admin app user id or name",
-    callStart: 1676332185,
-    callEnd: 1676332285,
-    transcription: "processing, it will be updated after AI process is done",
-    category: "processing, it will be updated after AI process is done"
-  },
-  {
-    tpc: "string",
-    caller: "signage name",
-    catcher: "admin app user id or name",
-    callStart: 1676332185,
-    callEnd: 1676332285,
-    transcription: "processing, it will be updated after AI process is done",
-    category: "processing, it will be updated after AI process is done"
-  },
-  {
-    tpc: "string",
-    caller: "signage name",
-    catcher: "admin app user id or name",
-    callStart: 1676332185,
-    callEnd: 1676332285,
-    transcription: "processing, it will be updated after AI process is done",
-    category: "processing, it will be updated after AI process is done"
-  }
-];
-
+// const data = [
+//   {
+//     tpc: "string",
+//     caller: "signage name",
+//     catcher: "admin app user id or name",
+//     callStart: 1676332185,
+//     callEnd: 1676332285,
+//     transcription: "processing, it will be updated after AI process is done",
+//     category: "processing, it will be updated after AI process is done"
+//   },
+//   {
+//     tpc: "string",
+//     caller: "signage name",
+//     catcher: "admin app user id or name",
+//     callStart: 1676332185,
+//     callEnd: 1676332285,
+//     transcription: "processing, it will be updated after AI process is done",
+//     category: "processing, it will be updated after AI process is done"
+//   },
+//   {
+//     tpc: "string",
+//     caller: "signage name",
+//     catcher: "admin app user id or name",
+//     callStart: 1676332185,
+//     callEnd: 1676332285,
+//     transcription: "processing, it will be updated after AI process is done",
+//     category: "processing, it will be updated after AI process is done"
+//   }
+// ];
 
 const PopUp = ({ transcript }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-    const style = {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      width: 400,
-      bgcolor: 'background.paper',
-      boxShadow: 24,
-      p: 4,
-    };
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
     <>
-      <Button sx={{ textTransform: 'none' }} onClick={handleOpen}>Transcription</Button>
+      <Button sx={{ textTransform: "none" }} onClick={handleOpen}>
+        Transcription
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -70,37 +83,66 @@ const PopUp = ({ transcript }) => {
       </Modal>
     </>
   );
-}
+};
 
 export default function RecentCalls() {
+  const [callhistory, setCallhistory] = useState([]);
+
+  useEffect(() => {
+    callhistoryService.listCallhistory().then((data) => {
+      console.log(data);
+      const formatData = data.map((element) => {
+        return {
+          tpc: element.tpc,
+          caller: element.caller,
+          catcher: element.catcher,
+          callStart: new Date(element.callStart).toDateString(),
+          callEnd: new Date(element.callEnd).toDateString(),
+          transcription: element.transcription,
+          category: element.category,
+        };
+      });
+      let counter = 0;
+      const formatDataWithID = formatData.map((element) => {
+        counter++;
+        return {
+          id: counter,
+          ...element,
+        };
+      });
+      setCallhistory(formatDataWithID);
+    });
+  }, []);
+
   return (
     <React.Fragment>
       <Title>Recent Calls</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Caller</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Dispatcher</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Call Start</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Call End</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Transcription</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Category</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Caller</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Dispatcher</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Call Start</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Call End</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Transcription</TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>Category</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((call) => (
+          {callhistory.map((call) => (
             <TableRow key={call.tpc}>
               <TableCell>{call.caller}</TableCell>
               <TableCell>{call.catcher}</TableCell>
               <TableCell>{call.callStart}</TableCell>
               <TableCell>{call.callEnd}</TableCell>
-              <TableCell><PopUp transcript={call.transcription} /></TableCell>
+              <TableCell>
+                <PopUp transcript={call.transcription} />
+              </TableCell>
               <TableCell>{call.category}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
     </React.Fragment>
   );
 }

@@ -7,9 +7,10 @@ import PhoneDisabledIcon from "@mui/icons-material/PhoneDisabled";
 import Title from "./layout/Title";
 import { getAuth } from "firebase/auth";
 
-const ZOOM_TOKEN = process.env.REACT_APP_ZOOM_TOKEN;
+import activecallService from "../api/activecallService";
+import callhistoryService from "../api/callhistoryService";
 
-function CallPortal({activecallInfo}) {
+function CallPortal({ activecallInfo }) {
   const [zoomClient, setZoomClient] = useState();
   const [zoomStream, setZoomStream] = useState();
 
@@ -30,7 +31,7 @@ function CallPortal({activecallInfo}) {
 
   const recieveVideoCall = async () => {
     // this is how to use id_token of firebase example
-    const auth = getAuth()
+    const auth = getAuth();
     auth.currentUser
       .getIdToken(/* forceRefresh */ true)
       .then(function (idToken) {
@@ -45,7 +46,11 @@ function CallPortal({activecallInfo}) {
     setActiveCall(true);
 
     try {
-      await zoomClient.join(activecallInfo.tpc, activecallInfo.token, activecallInfo.signageName);
+      await zoomClient.join(
+        activecallInfo.tpc,
+        activecallInfo.token,
+        activecallInfo.signageName
+      );
       const stream = zoomClient.getMediaStream();
       setZoomStream(stream);
       stream.startAudio();
@@ -71,10 +76,27 @@ function CallPortal({activecallInfo}) {
     }
   };
 
+  const callBackendWhenCallEnds = async () => {
+    console.log(activecallInfo);
+    await callhistoryService.createCallhistory({
+      tpc: activecallInfo.tpc,
+      caller: activecallInfo.signageName,
+      catcher: "Admin 001",
+      callStart: Math.floor(
+        new Date(activecallInfo.creationTime).getTime() / 1000
+      ),
+      callEnd: Math.floor(new Date().getTime() / 1000),
+      transcription: "Processing...",
+      category: "Processing...",
+    });
+    await activecallService.deleteActivecalls(activecallInfo.tpc);
+  };
+
   const endVideoCall = async () => {
     setActiveCall(false);
     setActiveScreenShare(false);
     try {
+      await callBackendWhenCallEnds();
       zoomClient.getRecordingClient().stopCloudRecording();
       await zoomClient.leave(true);
     } catch (error) {
@@ -89,7 +111,8 @@ function CallPortal({activecallInfo}) {
 
   const callData = {
     id: activecallInfo.tpc,
-    location:  activecallInfo.signageName,
+    location: activecallInfo.signageName,
+    startTime: new Date(activecallInfo.creationTime).toISOString(),
   };
 
   return (
@@ -98,6 +121,7 @@ function CallPortal({activecallInfo}) {
     >
       <Title>Call ID: {callData.id}</Title>
       <Typography>Location: {callData.location}</Typography>
+      <Typography>Start: {callData.startTime}</Typography>
       {activeCall ? (
         <>
           <video

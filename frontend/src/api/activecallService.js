@@ -5,18 +5,31 @@ const activecallService = {
   listActivecalls: async () => {
     const endpoint = API_ENDPOINT_URL + "activecalls";
     const result = await fetch(endpoint);
-    // const resultJson = await result.json()
+    const resultJson = await result.json()
 
-    //driver
-    const resultJson = {
-      list: [{
-        tpc: "Ike0001",
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfa2V5IjoiZk5tUWloVkttbG5IREFmYmN1c1JWNzk3a05OQTVFSW5RWVVCIiwidHBjIjoiSWtlMDAwMSIsInZlcnNpb24iOjEsInJvbGVfdHlwZSI6MSwiaWF0IjoxNjc2MzMwMTgzLCJleHAiOjE2NzY0MTY1ODN9.wCF0kE2KKmDQuxU1jIfpJT6zN0b1Q8Q_3BMJzTbBs7k",
-        signageName: "user2"
-      }],
-    };
+    return resultJson.activeCalls;
+  },
 
-    return resultJson;
+  updateActivecalls: async (tpc) => {
+    const body = {
+        "tpc": tpc
+    }
+    const endpoint = API_ENDPOINT_URL + "activecall";
+    await fetch(endpoint, {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+    });
+  },
+
+  deleteActivecalls: async (tpc) => {
+    const body = {
+        "tpc": tpc
+    }
+    const endpoint = API_ENDPOINT_URL + "activecall";
+    await fetch(endpoint, {
+        method: 'DELETE',
+        body: JSON.stringify(body),
+    });
   },
 };
 

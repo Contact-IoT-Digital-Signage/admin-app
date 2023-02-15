@@ -19,7 +19,11 @@ export default function CallCenter() {
     useEffect(()=>{
       activecallService.listActivecalls().then((data)=> {
         console.log(data)
-        setActivecalls(data.list)
+        const filteredData = data.filter((element)=>{
+          // only uncatched calls
+          return element.isActive === false
+        })
+        setActivecalls(filteredData)
       })
     }, [])
 
