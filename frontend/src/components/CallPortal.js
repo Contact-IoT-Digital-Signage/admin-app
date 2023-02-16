@@ -10,7 +10,7 @@ import { getAuth } from "firebase/auth";
 import activecallService from "../api/activecallService";
 import callhistoryService from "../api/callhistoryService";
 
-function CallPortal({ activecallInfo }) {
+function CallPortal({ activecallInfo, refresh, setRefresh }) {
   const [zoomClient, setZoomClient] = useState();
   const [zoomStream, setZoomStream] = useState();
 
@@ -90,6 +90,7 @@ function CallPortal({ activecallInfo }) {
       category: "Processing...",
     });
     await activecallService.deleteActivecalls(activecallInfo.tpc);
+    setRefresh(!refresh)
   };
 
   const endVideoCall = async () => {
