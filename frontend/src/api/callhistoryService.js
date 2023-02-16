@@ -7,7 +7,13 @@ const callhistoryService = {
     const result = await fetch(endpoint);
     const resultJson = await result.json()
 
-    return resultJson.history;
+    let returnVal = resultJson.history
+    returnVal.sort(function (a, b) {
+        if (a.callEnd > b.callEnd) return -1;
+        if (a.callEnd < b.callEnd) return 1;
+        return 0;
+      });
+    return returnVal
   },
 
   createCallhistory: async (body) => {
