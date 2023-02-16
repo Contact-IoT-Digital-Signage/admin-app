@@ -16,35 +16,6 @@ import { useEffect, useState } from "react";
 
 import callhistoryService from "../api/callhistoryService";
 
-// const data = [
-//   {
-//     tpc: "string",
-//     caller: "signage name",
-//     catcher: "admin app user id or name",
-//     callStart: 1676332185,
-//     callEnd: 1676332285,
-//     transcription: "processing, it will be updated after AI process is done",
-//     category: "processing, it will be updated after AI process is done"
-//   },
-//   {
-//     tpc: "string",
-//     caller: "signage name",
-//     catcher: "admin app user id or name",
-//     callStart: 1676332185,
-//     callEnd: 1676332285,
-//     transcription: "processing, it will be updated after AI process is done",
-//     category: "processing, it will be updated after AI process is done"
-//   },
-//   {
-//     tpc: "string",
-//     caller: "signage name",
-//     catcher: "admin app user id or name",
-//     callStart: 1676332185,
-//     callEnd: 1676332285,
-//     transcription: "processing, it will be updated after AI process is done",
-//     category: "processing, it will be updated after AI process is done"
-//   }
-// ];
 
 const PopUp = ({ transcript }) => {
   const [open, setOpen] = useState(false);
